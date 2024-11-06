@@ -1,0 +1,75 @@
+.main {
+  .btn-gradient {
+    border: 5px solid;
+    border-image-slice: 1;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    border-image-source: var(--gradient);
+    text-decoration: none;
+    --bs-btn-color: #fff;
+    transition: all 0.4s ease;
+  }
+
+  .btn-gradient:hover,
+  .btn-gradient:focus {
+    background: var(--gradient);
+    -webkit-background-clip: none;
+    -webkit-text-fill-color: #fff;
+    border: 5px solid #fff;
+  }
+
+  .btn-gradient-view:hover,
+  .btn-gradient-view:focus {
+    background: var(--gradient-view);
+    -webkit-background-clip: none;
+    -webkit-text-fill-color: #fff;
+  }
+
+  .btn-gradient-edit:hover,
+  .btn-gradient-edit:focus {
+    background: var(--gradient-edit);
+    -webkit-background-clip: none;
+    -webkit-text-fill-color: #fff;
+  }
+
+  .btn-gradient-delete:hover,
+  .btn-gradient-delete:focus {
+    background: var(--gradient-delete);
+    -webkit-background-clip: none;
+    -webkit-text-fill-color: #fff;
+  }
+
+  .card-inprogress {
+    border: 1px solid #dd2476;
+    margin-bottom: 1rem;
+  }
+
+  .card-completed {
+    border: 1px solid #0c9f62;
+    margin-bottom: 1rem;
+  }
+
+  .form-check-input:checked {
+    background-color: #dd2476;
+    border-color: #dd2476;
+  }
+  .form-check-input:focus {
+    border-color: #dd2476;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem #e769a2;
+  }
+
+  .form-select:focus {
+    border-color: #dd2476;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem #e769a2;
+  }
+
+  .title {
+    font-weight: 700;
+    font-size: 24px;
+    color: #dd2476;
+    margin-bottom: 15px;
+  }
+}

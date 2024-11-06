@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --gradient: linear-gradient(to left top, #DD2476 10%, #FF512F 90%);
+  --gradient-view: linear-gradient(to left top, #3b5998 10%,  #8405fa);
+  --gradient-edit: linear-gradient(to left top, #64ff59 10%, #024908);
+  --gradient-delete: linear-gradient(to left top, #f75c5c 10%, #820202);
+}
+
+
+body{
+  height: 100vh;
+}

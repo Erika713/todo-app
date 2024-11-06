@@ -1,0 +1,308 @@
+<div class="main">
+  <nav class="navbar navbar-expand-lg shadow text-white">
+    <a class="navbar-brand" href="#">Todo App</a>
+    <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button> -->
+
+    <!--<div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+
+    <form class="form-inline my-2 my-lg-0 ms-auto">
+      <button class="btn btn-gradient my-2 my-sm-0 mx-2" type="submit" data-bs-toggle="modal"
+        data-bs-target="#addTaskModal">
+        <i class="bi bi-list-task"></i>
+        Add Task
+      </button>
+      <button class="btn btn-gradient my-2 my-sm-0 mx-2" type="submit" data-bs-toggle="modal"
+        data-bs-target="#addUserModal">
+        <i class="bi bi-person-plus"></i>
+        Add User
+      </button>
+      <button class="btn btn-gradient my-2 my-sm-0 mx-2" type="submit" data-bs-toggle="modal"
+        data-bs-target="#addCategoryModal">
+        <i class="bi bi-bookmark-plus"></i>
+        Add Category
+      </button>
+    </form>
+    <!-- </div> -->
+  </nav>
+
+
+  <form class="row row-cols-lg-6 g-4 align-items-center mt-3 text-center">
+    <div class="form-floating">
+      <select class="form-select" id="userSelect" name="user" [(ngModel)]="selectedUserId">
+        @for(user of users; track $index){
+        <option [ngValue]="user.id">{{user.name}}</option>
+        }
+      </select>
+      <label for="userSelect">User</label>
+    </div>
+
+    <div class="form-floating">
+      <select class="form-select" id="categorySelect" name="category" [(ngModel)]="selectedCategoryId">
+        @for(category of categories; track $index){
+        <option [ngValue]="category.id">{{category.name}}</option>
+        }
+      </select>
+      <label for="categorySelect">Category</label>
+    </div>
+
+    <button type="submit" class="btn btn-gradient btn-lg" (click)="getAllTasks()">Search</button>
+  </form>
+
+  <div class="container-fluid mt-4">
+    <div class="row">
+      <div class="col-6">
+        <h4 class="text-center title">In progress tasks</h4>
+        @for(task of inprogressTasks; track $index){
+        <div class="card card-inprogress">
+          <div class="card-body d-flex">
+            <div class="col-1">
+              <input class="form-check-input" type="checkbox" (click)="setStatus(task)">
+            </div>
+            <div class="col-11 d-flex justify-content-between">
+              <div>{{task.title}}</div>
+              <div>
+                <button type="button" class="btn btn-gradient-view" data-bs-toggle="modal"
+                  data-bs-target="#viewFormModal" (click)="selectTask(task)">
+                  <i class="bi-eye"></i>
+                </button>
+                <button type="button" class="btn btn-gradient-edit" data-bs-toggle="modal"
+                  data-bs-target="#editFormModal" (click)="selectTask(task)">
+                  <i class="bi-pencil"></i>
+                </button>
+                <button type="button" class="btn btn-gradient-delete" (click)="deleteTask(task)">
+                  <i class="bi-trash3"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="col-6">
+        <h4 class="text-center title">Completed tasks</h4>
+        @for(task of completedTasks; track $index){
+        <div class="card card-completed">
+          <div class="card-body d-flex">
+            <div class="col-1">
+              <input class="form-check-input" type="checkbox" (click)="setStatus(task)" checked>
+            </div>
+            <div class="col-11 d-flex justify-content-between">
+              <div class="text-decoration-line-through">{{task.title}}</div>
+              <div>
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                  (click)="selectTask(task)">
+                  <i class="bi-eye"></i>
+                </button>
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editFormModal"
+                  (click)="selectTask(task)">
+                  <i class="bi-pencil"></i>
+                </button>
+                <button type="button" class="btn" (click)="deleteTask(task)">
+                  <i class="bi-trash3"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- View Modal -->
+  <div class="modal fade" id="viewFormModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Task details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <fieldset disabled>
+              <div class="mb-3">
+                Title
+                <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                  [value]="selectedTask?.title">
+              </div>
+              <div class="mb-3">
+                Description
+                <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                  [value]="selectedTask?.description">
+              </div>
+              <div class="mb-3">
+                Task Status
+                <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                  [value]="selectedTask?.completed ? 'Completed' : 'In progress'">
+              </div>
+              <div class="mb-3">
+                <label for="dueDate">Due Date</label>
+                <input id="dueDate" class="form-control" type="date" [value]="selectedTask?.dueDate" />
+                <span id="dueDateSelected"></span>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editFormModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Update task details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="updateTaskForm" (ngSubmit)="updateTask()">
+            <div class="mb-3">
+              Title
+              <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" formControlName="title">
+            </div>
+            <div class="mb-3">
+              Description
+              <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                formControlName="description">
+            </div>
+            <div class="mb-3">
+              Task Status
+              <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                formControlName="completed">
+            </div>
+
+            <div class="mb-3">
+              <label for="dueDate">Due Date</label>
+              <input id="dueDate" class="form-control" type="date" formControlName="dueDate" />
+              <span id="dueDateSelected"></span>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Task Modal -->
+  <div class="modal fade" id="addTaskModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Task details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="newTaskForm" (ngSubmit)="addNewTask()">
+            <div class="mb-3">
+              Title
+              <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" formControlName="title">
+            </div>
+            <div class="mb-3">
+              Description
+              <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                formControlName="description">
+            </div>
+
+            <div class="mb-3">
+              User
+              <select class="form-select" id="floatingSelect" name="user" formControlName="userId">
+                @for(user of users; track $index){
+                <option [ngValue]="user.id">{{user.name}}</option>
+                }
+              </select>
+            </div>
+            <div class="mb-3">
+              Category
+              <select class="form-select" id="floatingSelect" name="category" formControlName="categoryId">
+                @for(category of categories; track $index){
+                <option [ngValue]="category.id">{{category.name}}</option>
+                }
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="dueDate">Due Date</label>
+              <input id="dueDate" class="form-control" type="date" formControlName="dueDate" />
+              <span id="dueDateSelected"></span>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Create</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Add User Modal -->
+  <div class="modal fade" id="addUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Task details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="newUserForm" (ngSubmit)="addNewUser()">
+            <div class="mb-3">
+              Name
+              <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" formControlName="name">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Add User</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Category Modal -->
+  <div class="modal fade" id="addCategoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Task details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="newCategoryForm" (ngSubmit)="addNewCategory()">
+            <div class="mb-3">
+              Name
+              <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" formControlName="name">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Add Category</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
